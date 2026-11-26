@@ -1,0 +1,20 @@
+MTPR Agent
+Copyright 2026 Hamed Mtpr (GitHub: HamedMtpr)
+
+This product is licensed under the Apache License, Version 2.0.
+See the LICENSE file for the full license text.
+
+--------------------------------------------------------------------------------
+Third-party components
+--------------------------------------------------------------------------------
+
+MTPR Agent is built on the .NET platform and may use open-source libraries,
+each distributed under its own license. Each dependency keeps its own license
+terms. When a bundled third-party component requires an attribution notice,
+its notice is reproduced in this file, in the section below.
+
+--------------------------------------------------------------------------------
+Attribution notices
+--------------------------------------------------------------------------------
+
+(No third-party attribution notices are required at this time.)
