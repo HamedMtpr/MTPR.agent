@@ -1,9 +1,11 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/MTPR.Agent.Core/MTPR.Agent.Core.csproj" />
+    <Project Path="src/MTPR.Agent.Providers.GapGpt/MTPR.Agent.Providers.GapGpt.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/MTPR.Agent.Core.Tests/MTPR.Agent.Core.Tests.csproj" />
+    <Project Path="tests/MTPR.Agent.Providers.GapGpt.Tests/MTPR.Agent.Providers.GapGpt.Tests.csproj" />
     <Project Path="tests/Mtpr.TestUtilities/Mtpr.TestUtilities.csproj" />
   </Folder>
 </Solution>
