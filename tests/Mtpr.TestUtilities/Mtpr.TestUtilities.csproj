@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <RootNamespace>Mtpr.TestUtilities</RootNamespace>
+        <AssemblyName>Mtpr.TestUtilities</AssemblyName>
+        <LangVersion>latest</LangVersion>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector"  />
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="xunit.v3"/>
+        <PackageReference Include="xunit.v3.extensions.ordering"/>
+        <PackageReference Include="AwesomeAssertions" />
+        <PackageReference Include="NSubstitute" />
+    </ItemGroup>
+
+</Project>
