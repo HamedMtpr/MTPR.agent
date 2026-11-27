@@ -12,6 +12,7 @@ The agent is delivered as a cross-platform desktop application for Windows, macO
 
 - [About MTPR Agent ](docs/planning/about_mtpr_agent.md)
 - [Project roadmap](docs/planning/project_roadmap.md)
+- [M0 Build guide](docs/building/m0_project_foundation.md)
 
 ## Documentation
 

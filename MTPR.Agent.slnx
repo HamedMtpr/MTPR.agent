@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MTPR.Agent.Core/MTPR.Agent.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MTPR.Agent.Core.Tests/MTPR.Agent.Core.Tests.csproj" />
+    <Project Path="tests/Mtpr.TestUtilities/Mtpr.TestUtilities.csproj" />
+  </Folder>
+</Solution>

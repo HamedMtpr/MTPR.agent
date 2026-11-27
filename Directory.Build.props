@@ -1,0 +1,19 @@
+<Project>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+    <Authors>Hamed Mtpr</Authors>
+    <Company>MTPR</Company>
+    <Copyright>Copyright 2026 Hamed Mtpr</Copyright>
+    <License>Apache-2.0</License>
+    <RepositoryUrl>https://github.com/HamedMtpr/MTPR.agent</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>

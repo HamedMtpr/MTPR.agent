@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>MTPR.Agent.Core</RootNamespace>
+    <AssemblyName>MTPR.Agent.Core</AssemblyName>
+    <Description>Provider-independent core abstractions of the MTPR coding agent.</Description>
+  </PropertyGroup>
+
+</Project>

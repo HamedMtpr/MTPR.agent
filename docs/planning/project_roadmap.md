@@ -31,14 +31,14 @@ Create the initial .NET solution and establish the architectural foundation.
 ### Deliverables
 
 - [x] Create repository `MTPR.agent`
-- [ ] Create .NET solution
-- [ ] Define initial project structure
-- [ ] Define coding standards
+- [x] Create .NET solution
+- [x] Define initial project structure
+- [x] Define coding standards
 - [x] Configure Git
 - [x] Add basic documentation
-- [ ] Add test project
-- [ ] Establish CI build
-- [ ] Define initial abstractions
+- [x] Add test project
+- [x] Establish CI build
+- [x] Define initial abstractions
 - [ ] Verify build and tests on Windows, macOS, and Linux
 - [x] Apply Apache-2.0 license (`LICENSE`, `NOTICE`)
 
