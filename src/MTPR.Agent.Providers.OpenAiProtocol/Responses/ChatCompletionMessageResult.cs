@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MTPR.Agent.Providers.GapGpt.Responses;
+namespace MTPR.Agent.Providers.OpenAiProtocol.Responses;
 
 /// <summary>
 /// Generated message content.

@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
 
-namespace MTPR.Agent.Providers.GapGpt.Requests;
+namespace MTPR.Agent.Providers.OpenAiProtocol.Requests;
 
 /// <summary>
-/// A single message in a GapGPT chat completion call.
+/// A single message in an OpenAI-compatible chat completion call.
 /// </summary>
 internal sealed class ChatCompletionMessage
 {

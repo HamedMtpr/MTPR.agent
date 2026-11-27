@@ -1,9 +1,9 @@
 using MTPR.Agent.Core.Models;
 
-namespace MTPR.Agent.Providers.GapGpt.Mapping;
+namespace MTPR.Agent.Providers.OpenAiProtocol.Mapping;
 
 /// <summary>
-/// Converts GapGPT finish reason names to core finish reasons.
+/// Converts OpenAI finish reason names to core finish reasons.
 /// </summary>
 internal static class FinishReasonMapper
 {

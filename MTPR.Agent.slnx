@@ -2,10 +2,13 @@
   <Folder Name="/src/">
     <Project Path="src/MTPR.Agent.Core/MTPR.Agent.Core.csproj" />
     <Project Path="src/MTPR.Agent.Providers.GapGpt/MTPR.Agent.Providers.GapGpt.csproj" />
+    <Project Path="src/MTPR.Agent.Providers.OpenAiProtocol/MTPR.Agent.Providers.OpenAiProtocol.csproj" />
+    <Project Path="src/MTPR.Agent.Providers.OpenAiCompatible/MTPR.Agent.Providers.OpenAiCompatible.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/MTPR.Agent.Core.Tests/MTPR.Agent.Core.Tests.csproj" />
     <Project Path="tests/MTPR.Agent.Providers.GapGpt.Tests/MTPR.Agent.Providers.GapGpt.Tests.csproj" />
+    <Project Path="tests/MTPR.Agent.Providers.OpenAiCompatible.Tests/MTPR.Agent.Providers.OpenAiCompatible.Tests.csproj" />
     <Project Path="tests/Mtpr.TestUtilities/Mtpr.TestUtilities.csproj" />
   </Folder>
 </Solution>

@@ -19,8 +19,11 @@ dotnet test MTPR.Agent.slnx --no-build --configuration Release
 
 ## Projects added in this milestone
 
-- `src/MTPR.Agent.Providers.GapGpt` — GapGPT language model provider. References `MTPR.Agent.Core`.
-- `tests/MTPR.Agent.Providers.GapGpt.Tests` — unit tests for the provider.
+- `src/MTPR.Agent.Providers.OpenAiProtocol` — shared OpenAI chat completions implementation. References `MTPR.Agent.Core`.
+- `src/MTPR.Agent.Providers.GapGpt` — GapGPT provider. References `OpenAiProtocol`.
+- `src/MTPR.Agent.Providers.OpenAiCompatible` — provider for any OpenAI-compatible server. References `OpenAiProtocol`.
+- `tests/MTPR.Agent.Providers.GapGpt.Tests` — unit tests for GapGPT.
+- `tests/MTPR.Agent.Providers.OpenAiCompatible.Tests` — unit tests for OpenAI-compatible.
 
 No new NuGet packages are introduced. Versions remain pinned in `Directory.Packages.props`.
 

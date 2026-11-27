@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MTPR.Agent.Core\MTPR.Agent.Core.csproj" />
+    <ProjectReference Include="..\MTPR.Agent.Providers.OpenAiProtocol\MTPR.Agent.Providers.OpenAiProtocol.csproj" />
   </ItemGroup>
 
 </Project>

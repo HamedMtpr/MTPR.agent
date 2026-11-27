@@ -1,14 +1,14 @@
 using MTPR.Agent.Core.Models;
 
-namespace MTPR.Agent.Providers.GapGpt.Mapping;
+namespace MTPR.Agent.Providers.OpenAiProtocol.Mapping;
 
 /// <summary>
-/// Converts core chat roles to GapGPT role names.
+/// Converts core chat roles to OpenAI role names.
 /// </summary>
 internal static class RoleMapper
 {
     /// <summary>
-    /// Maps a chat role to its GapGPT name.
+    /// Maps a chat role to its OpenAI name.
     /// </summary>
     /// <param name="role">Core chat role.</param>
     /// <returns>The role name used by the API.</returns>
