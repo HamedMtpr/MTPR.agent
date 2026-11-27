@@ -39,7 +39,7 @@ Create the initial .NET solution and establish the architectural foundation.
 - [x] Add test project
 - [x] Establish CI build
 - [x] Define initial abstractions
-- [ ] Verify build and tests on Windows, macOS, and Linux
+- [x] Verify build and tests on Windows, macOS, and Linux
 - [x] Apply Apache-2.0 license (`LICENSE`, `NOTICE`)
 
 ### Expected Result
