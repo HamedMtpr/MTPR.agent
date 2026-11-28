@@ -344,6 +344,15 @@ public sealed class OpenAiCompatibleLanguageModelTests : UnitTest
             [new ChatMessage(ChatRole.User, "Hi")]);
     }
 
+    [Fact]
+    public void Options_Should_TargetLocalOllama_ByDefault()
+    {
+        var actual = new OpenAiCompatibleOptions();
+
+        actual.BaseUrl.Should().Be("http://localhost:11434/v1/");
+        actual.ApiKey.Should().BeEmpty();
+    }
+
     private static StubHttpMessageHandler createHandler(
         HttpStatusCode statusCode,
         string body)

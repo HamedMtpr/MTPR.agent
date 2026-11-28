@@ -21,7 +21,13 @@ dotnet test MTPR.Agent.slnx --no-build --configuration Release
 
 - `src/MTPR.Agent.Providers.OpenAiProtocol` — shared OpenAI chat completions implementation. References `MTPR.Agent.Core`.
 - `src/MTPR.Agent.Providers.GapGpt` — GapGPT provider. References `OpenAiProtocol`.
+- `src/MTPR.Agent.Providers.OpenAi` — OpenAI provider. References `OpenAiProtocol`.
+- `tests/MTPR.Agent.Providers.OpenAi.Tests` — unit tests for OpenAI.
 - `src/MTPR.Agent.Providers.OpenAiCompatible` — provider for any OpenAI-compatible server. References `OpenAiProtocol`.
+- `src/MTPR.Agent.Providers.Anthropic` — Anthropic Messages API provider. References `MTPR.Agent.Core`.
+- `tests/MTPR.Agent.Providers.Anthropic.Tests` — unit tests for Anthropic.
+- `src/MTPR.Agent.Providers.Google` — Google Gemini API provider. References `MTPR.Agent.Core`.
+- `tests/MTPR.Agent.Providers.Google.Tests` — unit tests for Google.
 - `tests/MTPR.Agent.Providers.GapGpt.Tests` — unit tests for GapGPT.
 - `tests/MTPR.Agent.Providers.OpenAiCompatible.Tests` — unit tests for OpenAI-compatible.
 

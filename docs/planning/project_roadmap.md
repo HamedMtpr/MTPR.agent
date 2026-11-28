@@ -59,8 +59,8 @@ Create a provider-independent LLM abstraction.
 - [x] Define LLM request/response model
 - [x] Define `ILanguageModel`
 - [x] Implement first LLM provider (GapGPT)
-- [ ] Implement remaining providers incrementally (OpenAI, Anthropic, OpenAI-compatible, Google, local models)
-- [ ] Support local model execution
+- [x] Implement remaining providers incrementally (OpenAI, Anthropic, OpenAI-compatible, Google, local models)
+- [x] Support local model execution
 - [x] Implement conversation context
 - [x] Implement system instructions
 - [x] Add basic error handling

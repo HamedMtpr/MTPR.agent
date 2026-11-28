@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>MTPR.Agent.Providers.Google</RootNamespace>
+    <AssemblyName>MTPR.Agent.Providers.Google</AssemblyName>
+    <Description>Google Gemini language model provider of the MTPR coding agent.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MTPR.Agent.Core\MTPR.Agent.Core.csproj" />
+  </ItemGroup>
+
+</Project>
