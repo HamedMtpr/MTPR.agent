@@ -97,8 +97,18 @@ tests/
 
 `GapGptLanguageModel` always sends a Bearer token. `OpenAiCompatibleLanguageModel` sends it only when an API key is configured. Error messages are prefixed with the provider name. Provider projects reference `OpenAiProtocol`, which references `Core`.
 
+## Streaming design
+
+`ILanguageModel` exposes two methods:
+
+- `CompleteAsync` returns a single `LanguageModelResponse` and is unchanged.
+- `StreamAsync` returns `IAsyncEnumerable<LanguageModelChunk>`. Each chunk carries a `ContentDelta` and, on the last chunk, a `FinishReason`.
+
+`ChatCompletionsLanguageModel` implements streaming with server-sent events. It sends `stream: true` (the flag is omitted for `CompleteAsync`), reads the response with `HttpCompletionOption.ResponseHeadersRead`, and parses `data:` lines until `[DONE]`. Other lines (comments, keep-alives, blank lines) are ignored. Both methods share one request helper that maps HTTP failures to `LanguageModelException`.
+
+Usage is not reported for streamed calls, so `LanguageModelChunk` has no usage field.
+
 ## Pending work
 
 - OpenAI, Anthropic, Google providers
-- Streaming support (design before further providers)
 - Local model execution

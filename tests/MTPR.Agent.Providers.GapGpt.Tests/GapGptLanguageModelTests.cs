@@ -94,6 +94,19 @@ public sealed class GapGptLanguageModelTests : UnitTest
     }
 
     [Fact]
+    public async Task CompleteAsync_Should_SendBearerHeader_When_ApiKeyIsSet()
+    {
+        var handler = createHandler(
+            HttpStatusCode.OK,
+            """{ "choices": [ { } ] }""");
+        var model = createModel(handler);
+
+        await model.CompleteAsync(createRequest(), CancellationToken.None);
+
+        handler.AuthorizationHeader.Should().Be("Bearer test-key");
+    }
+
+    [Fact]
     public async Task CompleteAsync_Should_Throw_When_RoleIsUnsupported()
     {
         var model = createModel(
@@ -165,6 +178,123 @@ public sealed class GapGptLanguageModelTests : UnitTest
         var exception =
             await actual.Should().ThrowAsync<LanguageModelException>();
         exception.Which.InnerException.Should().BeSameAs(inner);
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_Throw_When_RequestIsNull()
+    {
+        var model = createModel(createHandler(HttpStatusCode.OK, "data: [DONE]"));
+
+        var actual = () =>
+            collectAsync(model.StreamAsync(null!, CancellationToken.None));
+
+        await actual.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_SkipEntries_When_ChoiceIsMissing()
+    {
+        var body =
+            """
+            data: null
+
+            data: {"choices":[]}
+
+            data: {"choices":[{"delta":{"content":"Hi"}}]}
+            """;
+        var model = createModel(createHandler(HttpStatusCode.OK, body));
+
+        var actual =
+            await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        actual.Should().BeEquivalentTo([new LanguageModelChunk("Hi")]);
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_UseEmptyContent_When_DeltaIsMissing()
+    {
+        var model = createModel(
+            createHandler(HttpStatusCode.OK, """data: {"choices":[{}]}"""));
+
+        var actual =
+            await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        actual.Should().BeEquivalentTo([new LanguageModelChunk(string.Empty)]);
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_SendBearerHeader_When_ApiKeyIsSet()
+    {
+        var handler = createHandler(HttpStatusCode.OK, "data: [DONE]");
+        var model = createModel(handler);
+
+        await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        handler.AuthorizationHeader.Should().Be("Bearer test-key");
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_YieldDeltasAndFinishReason()
+    {
+        var body =
+            """
+            : keep-alive
+
+            data: {"choices":[{"delta":{"content":"Hi"}}]}
+
+            data: {"choices":[{"delta":{},"finish_reason":"stop"}]}
+
+            data: [DONE]
+            """;
+        var model = createModel(createHandler(HttpStatusCode.OK, body));
+
+        var actual =
+            await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        actual.Should().BeEquivalentTo(
+        [
+            new LanguageModelChunk("Hi"),
+            new LanguageModelChunk(string.Empty, FinishReason.Stop),
+        ],
+        options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_Throw_WithStatusCode_When_ProviderFails()
+    {
+        var model = createModel(createHandler(HttpStatusCode.TooManyRequests, "{}"));
+
+        var actual = () =>
+            collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        var exception =
+            await actual.Should().ThrowAsync<LanguageModelException>();
+        exception.Which.StatusCode.Should().Be(429);
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_Throw_When_RequestCannotBeSent()
+    {
+        var model = createModel(
+            new ThrowingHttpMessageHandler(new HttpRequestException("offline")));
+
+        var actual = () =>
+            collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        await actual.Should().ThrowAsync<LanguageModelException>();
+    }
+
+    private static async Task<List<LanguageModelChunk>> collectAsync(
+        IAsyncEnumerable<LanguageModelChunk> chunks)
+    {
+        var actual = new List<LanguageModelChunk>();
+
+        await foreach (var chunk in chunks)
+        {
+            actual.Add(chunk);
+        }
+
+        return actual;
     }
 
     private static LanguageModelRequest createRequest()

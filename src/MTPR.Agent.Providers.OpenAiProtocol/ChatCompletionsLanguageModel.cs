@@ -1,4 +1,6 @@
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
 using MTPR.Agent.Core.Abstractions;
 using MTPR.Agent.Core.Exceptions;
 using MTPR.Agent.Core.Models;
@@ -17,6 +19,8 @@ public abstract class ChatCompletionsLanguageModel(HttpClient httpClient)
     : ILanguageModel
 {
     private const string chatCompletionsPath = "chat/completions";
+    private const string streamDataPrefix = "data:";
+    private const string streamDoneMarker = "[DONE]";
 
     /// <summary>
     /// Gets the provider name used in error messages.
@@ -30,34 +34,16 @@ public abstract class ChatCompletionsLanguageModel(HttpClient httpClient)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        using HttpRequestMessage httpRequest = new (HttpMethod.Post,
-            chatCompletionsPath);
-        httpRequest.Content = JsonContent.Create(toChatCompletionRequest(request));
-        ApplyAuthorization(httpRequest);
-
         ChatCompletionResponse? body;
 
-        try
+        using (var httpResponse = await sendAsync(
+            toChatCompletionRequest(request, stream: null),
+            HttpCompletionOption.ResponseContentRead,
+            cancellationToken))
         {
-            using var httpResponse =
-                await httpClient.SendAsync(httpRequest, cancellationToken);
-
-            if (!httpResponse.IsSuccessStatusCode)
-            {
-                throw new LanguageModelException(
-                    $"{ProviderName} request failed with status {(int)httpResponse.StatusCode}.",
-                    (int)httpResponse.StatusCode);
-            }
-
             body =
                 await httpResponse.Content
                     .ReadFromJsonAsync<ChatCompletionResponse>(cancellationToken);
-        }
-        catch (HttpRequestException exception)
-        {
-            throw new LanguageModelException(
-                $"{ProviderName} request could not be sent.",
-                exception);
         }
 
         var choice = body?.Choices.FirstOrDefault();
@@ -74,13 +60,97 @@ public abstract class ChatCompletionsLanguageModel(HttpClient httpClient)
             toTokenUsage(body.Usage));
     }
 
+    /// <inheritdoc />
+    public async IAsyncEnumerable<LanguageModelChunk> StreamAsync(
+        LanguageModelRequest request,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        using var httpResponse = await sendAsync(
+            toChatCompletionRequest(request, stream: true),
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken);
+
+        using StreamReader reader = new (
+            await httpResponse.Content.ReadAsStreamAsync(cancellationToken));
+
+        while (await reader.ReadLineAsync(cancellationToken) is { } line)
+        {
+            if (!line.StartsWith(streamDataPrefix, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var data = line[streamDataPrefix.Length..].Trim();
+
+            if (data == streamDoneMarker)
+            {
+                yield break;
+            }
+
+            var chunk = JsonSerializer.Deserialize<ChatCompletionStreamChunk>(data);
+            var choice = chunk?.Choices.FirstOrDefault();
+
+            if (choice is null)
+            {
+                continue;
+            }
+
+            yield return new LanguageModelChunk(
+                choice.Delta?.Content ?? string.Empty,
+                choice.FinishReason is null
+                    ? null
+                    : FinishReasonMapper.Map(choice.FinishReason));
+        }
+    }
+
     /// <summary>
     /// Adds the authorization information required by the provider to the request.
     /// </summary>
     /// <param name="request">The outgoing HTTP request.</param>
     protected abstract void ApplyAuthorization(HttpRequestMessage request);
 
-    private static ChatCompletionRequest toChatCompletionRequest(LanguageModelRequest request)
+    private async Task<HttpResponseMessage> sendAsync(
+        ChatCompletionRequest body,
+        HttpCompletionOption completionOption,
+        CancellationToken cancellationToken)
+    {
+        using HttpRequestMessage httpRequest = new (HttpMethod.Post,
+            chatCompletionsPath);
+        httpRequest.Content = JsonContent.Create(body);
+        ApplyAuthorization(httpRequest);
+
+        HttpResponseMessage httpResponse;
+
+        try
+        {
+            httpResponse =
+                await httpClient.SendAsync(httpRequest, completionOption, cancellationToken);
+        }
+        catch (HttpRequestException exception)
+        {
+            throw new LanguageModelException(
+                $"{ProviderName} request could not be sent.",
+                exception);
+        }
+
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            return httpResponse;
+        }
+
+        var statusCode = (int)httpResponse.StatusCode;
+        httpResponse.Dispose();
+
+        throw new LanguageModelException(
+            $"{ProviderName} request failed with status {statusCode}.",
+            statusCode);
+    }
+
+    private static ChatCompletionRequest toChatCompletionRequest(
+        LanguageModelRequest request,
+        bool? stream)
     {
         return new ChatCompletionRequest
         {
@@ -94,6 +164,7 @@ public abstract class ChatCompletionsLanguageModel(HttpClient httpClient)
                 .ToList(),
             Temperature = request.Temperature,
             MaxTokens = request.MaxOutputTokens,
+            Stream = stream,
         };
     }
 

@@ -193,6 +193,150 @@ public sealed class OpenAiCompatibleLanguageModelTests : UnitTest
         exception.Which.InnerException.Should().BeSameAs(inner);
     }
 
+    [Fact]
+    public async Task StreamAsync_Should_YieldDeltasAndFinishReason()
+    {
+        var body =
+            """
+            : keep-alive
+
+            data: {"choices":[{"delta":{"content":"Hel"}}]}
+
+            data: {"choices":[{"delta":{"content":"lo"}}]}
+
+            data: {"choices":[{"delta":{},"finish_reason":"stop"}]}
+
+            data: [DONE]
+
+            """;
+        var model = createModel(createHandler(HttpStatusCode.OK, body));
+
+        var actual =
+            await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        actual.Should().BeEquivalentTo(
+        [
+            new LanguageModelChunk("Hel"),
+            new LanguageModelChunk("lo"),
+            new LanguageModelChunk(string.Empty, FinishReason.Stop),
+        ],
+        options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_SendStreamFlag()
+    {
+        var handler = createHandler(HttpStatusCode.OK, "data: [DONE]\n\n");
+        var model = createModel(handler);
+
+        await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        handler.RequestBody.Should().Contain("\"stream\":true");
+    }
+
+    [Fact]
+    public async Task CompleteAsync_Should_NotSendStreamFlag()
+    {
+        var handler = createHandler(
+            HttpStatusCode.OK,
+            """{ "choices": [ { } ] }""");
+        var model = createModel(handler);
+
+        await model.CompleteAsync(createRequest(), CancellationToken.None);
+
+        handler.RequestBody.Should().NotContain("stream");
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_Throw_WithStatusCode_When_ProviderFails()
+    {
+        var model = createModel(createHandler(HttpStatusCode.TooManyRequests, "{}"));
+
+        var actual = () =>
+            collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        var exception =
+            await actual.Should().ThrowAsync<LanguageModelException>();
+        exception.Which.StatusCode.Should().Be(429);
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_Throw_WhenRequestCannotBeSent()
+    {
+        var model = createModel(new ThrowingHttpMessageHandler(new HttpRequestException("offline")));
+
+        var actual = () =>
+            collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        await actual.Should().ThrowAsync<LanguageModelException>();
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_Throw_When_RequestIsNull()
+    {
+        var model = createModel(createHandler(HttpStatusCode.OK, "data: [DONE]"));
+
+        var actual = () =>
+            collectAsync(model.StreamAsync(null!, CancellationToken.None));
+
+        await actual.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_SkipEntries_When_ChoiceIsMissing()
+    {
+        var body =
+            """
+            data: null
+
+            data: {"choices":[]}
+
+            data: {"choices":[{"delta":{"content":"Hi"}}]}
+            """;
+        var model = createModel(createHandler(HttpStatusCode.OK, body));
+
+        var actual =
+            await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        actual.Should().BeEquivalentTo([new LanguageModelChunk("Hi")]);
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_UseEmptyContent_When_DeltaIsMissing()
+    {
+        var model = createModel(
+            createHandler(HttpStatusCode.OK, """data: {"choices":[{}]}"""));
+
+        var actual =
+            await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        actual.Should().BeEquivalentTo([new LanguageModelChunk(string.Empty)]);
+    }
+
+    [Fact]
+    public async Task StreamAsync_Should_SendBearerHeader_When_ApiKeyIsSet()
+    {
+        var handler = createHandler(HttpStatusCode.OK, "data: [DONE]");
+        var model = createModel(handler);
+
+        await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        handler.AuthorizationHeader.Should().Be("Bearer test-key");
+    }
+
+    private static async Task<List<LanguageModelChunk>> collectAsync(
+        IAsyncEnumerable<LanguageModelChunk> chunks)
+    {
+        var actual = new List<LanguageModelChunk>();
+
+        await foreach (var chunk in chunks)
+        {
+            actual.Add(chunk);
+        }
+
+        return actual;
+    }
+
     private static LanguageModelRequest createRequest()
     {
         return new LanguageModelRequest(

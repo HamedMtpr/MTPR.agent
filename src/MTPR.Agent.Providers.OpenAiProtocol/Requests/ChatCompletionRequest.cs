@@ -30,4 +30,12 @@ internal sealed class ChatCompletionRequest
     /// </summary>
     [JsonPropertyName("max_tokens")]
     public int? MaxTokens { get; init; }
+
+    /// <summary>
+    /// Gets or sets whether the response is streamed as server-sent events.
+    /// Omitted for regular completions.
+    /// </summary>
+    [JsonPropertyName("stream")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? Stream { get; init; }
 }
