@@ -201,6 +201,18 @@ public sealed class GoogleLanguageModelTests : UnitTest
     }
 
     [Fact]
+    public async Task StreamAsync_Should_YieldEmptyChunk_When_NoCandidates()
+    {
+        var body = """data: {"candidates":[]}""";
+        var model = createModel(createHandler(HttpStatusCode.OK, body));
+
+        var actual = await collectAsync(
+            model.StreamAsync(createRequest(), CancellationToken.None));
+
+        actual.Should().BeEquivalentTo([new LanguageModelChunk(string.Empty)]);
+    }
+
+    [Fact]
     public async Task StreamAsync_Should_Throw_WithStatusCode_When_ProviderFails()
     {
         var model = createModel(createHandler(HttpStatusCode.TooManyRequests, "{}"));

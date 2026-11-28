@@ -206,6 +206,30 @@ public sealed class AnthropicLanguageModelTests : UnitTest
     }
 
     [Fact]
+    public async Task StreamAsync_Should_SkipIncompleteEvents_And_EndWithoutStopEvent()
+    {
+        var body =
+            """
+            data: null
+
+            data: {"type":"content_block_delta"}
+
+            data: {"type":"content_block_delta","delta":{}}
+
+            data: {"type":"message_delta"}
+            """;
+        var model = createModel(createHandler(HttpStatusCode.OK, body));
+
+        var actual =
+            await collectAsync(model.StreamAsync(createRequest(), CancellationToken.None));
+
+        actual.Should().BeEquivalentTo(
+        [
+            new LanguageModelChunk(string.Empty, FinishReason.Unknown),
+        ]);
+    }
+
+    [Fact]
     public async Task StreamAsync_Should_Throw_When_StreamReportsError()
     {
         var body = """data: {"type":"error"}""";
