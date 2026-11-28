@@ -1,4 +1,5 @@
 using MTPR.Agent.Core.Abstractions;
+using MTPR.Agent.Core.Exceptions;
 using MTPR.Agent.Core.Models;
 
 namespace MTPR.Agent.Core.Executors;
@@ -34,6 +35,10 @@ public sealed class ToolExecutor(IToolRegistry registry, IJsonSchemaValidator va
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             throw;
+        }
+        catch (PolicyViolationException exception)
+        {
+            return new(call.Id, ToolStatus.Denied, exception.Message);
         }
         catch (Exception exception)
         {

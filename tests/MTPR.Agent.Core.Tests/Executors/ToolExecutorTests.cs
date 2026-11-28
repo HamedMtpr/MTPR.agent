@@ -1,3 +1,4 @@
+using MTPR.Agent.Core.Exceptions;
 using MTPR.Agent.Core.Abstractions;
 using MTPR.Agent.Core.Executors;
 using MTPR.Agent.Core.Models;
@@ -68,6 +69,17 @@ public sealed class ToolExecutorTests : UnitTest
 
         actual.Status.Should().Be(ToolStatus.Failed);
         actual.Content.Should().Be("Tool 'throwing_tool' failed: disk offline");
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_Should_ReturnDenied_When_PolicyIsViolated()
+    {
+        var executor = createExecutor(new ThrowingTool(new PolicyViolationException("outside workspace")));
+
+        var actual = await executor.ExecuteAsync(createCall("throwing_tool", "{}"), CancellationToken.None);
+
+        actual.Status.Should().Be(ToolStatus.Denied);
+        actual.Content.Should().Be("outside workspace");
     }
 
     [Fact]
