@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>MTPR.Agent.Providers.GapGpt</RootNamespace>
+    <AssemblyName>MTPR.Agent.Providers.GapGpt</AssemblyName>
+    <Description>GapGPT language model provider of the MTPR coding agent.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MTPR.Agent.Providers.OpenAiProtocol\MTPR.Agent.Providers.OpenAiProtocol.csproj" />
+  </ItemGroup>
+
+</Project>

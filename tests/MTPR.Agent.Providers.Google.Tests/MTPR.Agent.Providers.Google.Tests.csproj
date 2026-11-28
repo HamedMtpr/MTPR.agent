@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>MTPR.Agent.Providers.Google.Tests</RootNamespace>
+        <AssemblyName>MTPR.Agent.Providers.Google.Tests</AssemblyName>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <ProjectReference Include="..\..\src\MTPR.Agent.Providers.Google\MTPR.Agent.Providers.Google.csproj" />
+        <ProjectReference Include="..\Mtpr.TestUtilities\Mtpr.TestUtilities.csproj" />
+    </ItemGroup>
+
+</Project>

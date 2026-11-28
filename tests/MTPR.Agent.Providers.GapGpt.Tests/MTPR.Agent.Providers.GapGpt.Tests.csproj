@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>MTPR.Agent.Providers.GapGpt.Tests</RootNamespace>
+        <AssemblyName>MTPR.Agent.Providers.GapGpt.Tests</AssemblyName>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <ProjectReference Include="..\..\src\MTPR.Agent.Providers.GapGpt\MTPR.Agent.Providers.GapGpt.csproj" />
+        <ProjectReference Include="..\Mtpr.TestUtilities\Mtpr.TestUtilities.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>MTPR.Agent.Providers.OpenAi</RootNamespace>
+    <AssemblyName>MTPR.Agent.Providers.OpenAi</AssemblyName>
+    <Description>OpenAI language model provider of the MTPR coding agent.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MTPR.Agent.Providers.OpenAiProtocol\MTPR.Agent.Providers.OpenAiProtocol.csproj" />
+  </ItemGroup>
+
+</Project>

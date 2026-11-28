@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>MTPR.Agent.Providers.OpenAiProtocol</RootNamespace>
+    <AssemblyName>MTPR.Agent.Providers.OpenAiProtocol</AssemblyName>
+    <Description>Shared OpenAI chat completions protocol implementation of the MTPR coding agent.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MTPR.Agent.Core\MTPR.Agent.Core.csproj" />
+  </ItemGroup>
+
+</Project>
