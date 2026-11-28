@@ -6,7 +6,7 @@ namespace MTPR.Agent.Core.Tests.Models;
 public sealed class ToolResultTests : UnitTest
 {
     [Fact]
-    public void Constructor_ShouldExposeCallIdStatusAndContent()
+    public void Constructor_Should_ExposeCallIdStatusAndContent()
     {
         var actual = new ToolResult("call-1", ToolStatus.Denied, "Path is outside the workspace");
 

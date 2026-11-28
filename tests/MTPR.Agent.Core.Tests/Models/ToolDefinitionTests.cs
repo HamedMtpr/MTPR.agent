@@ -7,7 +7,7 @@ namespace MTPR.Agent.Core.Tests.Models;
 public sealed class ToolDefinitionTests : UnitTest
 {
     [Fact]
-    public void Constructor_ShouldExposeNameDescriptionAndSchema()
+    public void Constructor_Should_ExposeNameDescriptionAndSchema()
     {
         var schema = JsonDocument.Parse("{\"type\":\"object\"}").RootElement;
 

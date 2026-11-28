@@ -7,7 +7,7 @@ namespace MTPR.Agent.Core.Tests.Models;
 public sealed class ToolCallTests : UnitTest
 {
     [Fact]
-    public void Constructor_ShouldExposeIdNameAndArguments()
+    public void Constructor_Should_ExposeIdNameAndArguments()
     {
         var arguments = JsonDocument.Parse("{\"path\":\"a.txt\"}").RootElement;
 

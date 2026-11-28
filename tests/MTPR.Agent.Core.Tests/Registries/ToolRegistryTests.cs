@@ -7,7 +7,7 @@ namespace MTPR.Agent.Core.Tests.Registries;
 public sealed class ToolRegistryTests : UnitTest
 {
     [Fact]
-    public void Find_ShouldReturnRegisteredTool()
+    public void Find_Should_ReturnRegisteredTool()
     {
         var tool = new StubTool("file_read");
         var registry = new ToolRegistry([tool]);
@@ -18,7 +18,7 @@ public sealed class ToolRegistryTests : UnitTest
     }
 
     [Fact]
-    public void Find_ShouldReturnNull_WhenNameIsUnknown()
+    public void Find_Should_ReturnNull_WhenNameIsUnknown()
     {
         var registry = new ToolRegistry([new StubTool("file_read")]);
 
@@ -28,7 +28,7 @@ public sealed class ToolRegistryTests : UnitTest
     }
 
     [Fact]
-    public void Find_ShouldBeCaseSensitive()
+    public void Find_Should_BeCaseSensitive()
     {
         var registry = new ToolRegistry([new StubTool("file_read")]);
 
@@ -38,7 +38,7 @@ public sealed class ToolRegistryTests : UnitTest
     }
 
     [Fact]
-    public void Constructor_ShouldThrow_WhenNamesAreDuplicated()
+    public void Constructor_Should_Throw_WhenNamesAreDuplicated()
     {
         var act = () => new ToolRegistry([new StubTool("file_read"), new StubTool("file_read")]);
 
@@ -46,7 +46,7 @@ public sealed class ToolRegistryTests : UnitTest
     }
 
     [Fact]
-    public void Definitions_ShouldContainDefinitionOfEachTool()
+    public void Definitions_Should_ContainDefinitionOfEachTool()
     {
         var registry = new ToolRegistry([new StubTool("file_read"), new StubTool("git_status")]);
 
